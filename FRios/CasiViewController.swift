@@ -88,13 +88,23 @@ class CasiViewController: UIViewController ,UICollectionViewDelegate, UICollecti
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if let cell = collectionView.cellForItem(at: indexPath as IndexPath) {
-            //        performSegue(withIdentifier: "showDetail", sender: cell)
-            //        print("click:\(list[indexPath.row].nameid)")
+            let id=list[indexPath.row].nameid
+            showplayer(id: id)
         } else {
             // Error indexPath is not on screen: this should never happen.
         }
     }
     
+    func showplayer(id:String) -> Void {
+        let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
+        
+        let editTaskVC = storyBoard.instantiateViewController(withIdentifier: "player") as! PlayerViewController
+        editTaskVC.chonInt = 0
+        //editTaskVC.listtophit=self.listtophit
+        editTaskVC.loai=3
+        editTaskVC.albumid=id
+        self.present(editTaskVC, animated:true, completion:nil)
+    }
 
     
     func alamofireGetCasi() {

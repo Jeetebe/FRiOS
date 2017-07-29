@@ -1,4 +1,4 @@
-//
+////
 //  PlayerViewController.swift
 //  ChurchConnect
 //
@@ -32,6 +32,11 @@ class PlayerViewController: UIViewController,UITableViewDelegate,MFMessageCompos
     
        @IBOutlet weak var bannerView: GADBannerView!
 
+    @IBOutlet weak var btncaidat: DesignButton!
+    /// The interstitial ad.
+    var interstitial: GADInterstitial!
+
+    
     var playList: NSMutableArray = NSMutableArray()
     var timer: Timer?
     var index: Int = Int()
@@ -41,9 +46,17 @@ class PlayerViewController: UIViewController,UITableViewDelegate,MFMessageCompos
     var listtophit=[Song]()
     var chonInt:Int!
     var loai:Int!
+    var albumid:String!
     
     var currsong:Song!
     var currentAudioIndex = 0
+    
+    enum UIUserInterfaceIdiom : Int {
+        case unspecified
+        
+        case phone // iPhone and iPod touch style UI
+        case pad // iPad style UI
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,18 +65,24 @@ class PlayerViewController: UIViewController,UITableViewDelegate,MFMessageCompos
         playButton.setImage(UIImage(named:"ipause"), for: .normal)
         //let soundUrl = "http://45.121.26.141/w/colorring/al/601/785/0/0000/0001/399.mp3"
         
-        print("chon \(chonInt)")
+        print("loai:\(loai) ;chon \(chonInt); id=\(albumid)")
         print("size \(listtophit.count)")
         
-        currentAudioIndex=chonInt
-        currsong = listtophit[chonInt]
+        //currentAudioIndex=chonInt
+        //currsong = listtophit[chonInt]
         
-        print("currsong:\(currsong.tonename)")
+        //print("currsong:\(currsong.tonename)")
+        currentAudioIndex=chonInt
         playerSlider.value = 0.0
-        currentTimeLabel.text = "00:00:00"
-        timeLabel.text = "00:00:00"
-        setinfor()
+        currentTimeLabel.text = "00:00"
+        timeLabel.text = "00:00"
+       
         showwaiting()
+        
+        if (UIDevice.current.userInterfaceIdiom == .pad)
+        {
+            btncaidat.isHidden=true
+        }
 
         //ads
         bannerView.adSize=kGADAdSizeSmartBannerPortrait
@@ -71,6 +90,9 @@ class PlayerViewController: UIViewController,UITableViewDelegate,MFMessageCompos
         bannerView.adUnitID = "ca-app-pub-8623108209004118/8052505184"
         bannerView.rootViewController = self
         bannerView.load(GADRequest())
+        
+        
+        createAndLoadInterstitial()
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -87,6 +109,23 @@ class PlayerViewController: UIViewController,UITableViewDelegate,MFMessageCompos
         }
         UIApplication.shared.beginReceivingRemoteControlEvents()
         
+        if (loai>=1)
+        {
+            alamofireGetTophit(id: albumid)
+        
+        }
+        else
+        {
+           preparePlay()
+        }
+        
+        
+    }
+    func preparePlay() -> Void {
+    if (listtophit.count>0)
+    {
+        currsong = listtophit[currentAudioIndex]
+        setinfor()
         var soundUrl=getvalidURL(song: currsong!)
         print("posiyion: \(currentAudioIndex), song: \(currsong.tonename)")
         print("hople: \(soundUrl)")
@@ -101,7 +140,53 @@ class PlayerViewController: UIViewController,UITableViewDelegate,MFMessageCompos
             self.setupTimer()
             stopwaiting()
         }
+
     }
+    }
+    func alamofireGetTophit(id:String) {
+        var todoEndpoint: String = "http://123.30.100.126:8081/Restapi/rest/Appservice/gettophit?id=" + id
+        let urlcasi="http://123.30.100.126:8081/Restapi/rest/Appservice/getsongofsinger/chonloc?singerid=" + id.replacingOccurrences(of: " ", with: "%20")
+        if loai==3
+        {
+            todoEndpoint=urlcasi
+        }
+        print("ur;:\(todoEndpoint)")
+        Alamofire.request(todoEndpoint)
+            
+            .responseJSON { response in
+                guard response.result.error == nil else {
+                    // got an error in getting the data, need to handle it
+                    print(response.result.error!)
+                    //completionHandler(.failure(response.result.error!))
+                    return
+                }
+                
+                // make sure we got JSON and it's an array of dictionaries
+                guard let json = response.result.value as? [[String: AnyObject]] else {
+                    print("didn't get todo objects as JSON from API")
+                    //                    completionHandler(.failure(BackendError.objectSerialization(reason: "Did not get JSON array in response")))
+                    return
+                }
+                
+                // turn each item in JSON in to Todo object
+                //print("result:\(json)")
+                self.listtophit.removeAll()
+                for element in json {
+                    if let todoResult = Song(json: element) {
+                        self.listtophit.append(todoResult)
+                    }
+                }
+                print("out listtophit:\(self.listtophit.count)")
+                self.stopwaiting()
+
+                if (self.listtophit.count>0)
+                {
+                    self.myTable.reloadData()
+                    self.preparePlay()
+                }
+        }
+    }
+
     func setinfor() -> Void {
         artistNameLabel.text=currsong.singer
         songNameLabel.text=currsong.tonename
@@ -121,6 +206,7 @@ class PlayerViewController: UIViewController,UITableViewDelegate,MFMessageCompos
         
         print("currsong:\(currsong.tonename)")
         setinfor()
+        showwaiting()
         var soundUrl=getvalidURL(song: currsong!)
         print("posiyion: \(currentAudioIndex), song: \(currsong.tonename)")
         print("hople: \(soundUrl)")
@@ -132,21 +218,22 @@ class PlayerViewController: UIViewController,UITableViewDelegate,MFMessageCompos
         else
         {
             self.play(url: URL(string:soundUrl)!)
-            self.setupTimer()
+            //self.setupTimer()
             stopwaiting()
         }
     }
     
     override func viewDidDisappear( _ animated: Bool) {
         super.viewWillDisappear(animated)
-//        NotificationCenter.default.removeObserver(self)
-//        self.avPlayer = nil
-//        self.timer?.invalidate()
+       NotificationCenter.default.removeObserver(self)
+       self.avPlayer = nil
+       self.timer?.invalidate()
     }
     
     
     @IBAction func caidat_click(_ sender: Any) {
 
+        
         let messageVC = MFMessageComposeViewController()
         
         messageVC.body = "DK NC " + currsong.tonecode.trimmingCharacters(in: NSCharacterSet.whitespacesAndNewlines) + " 1214324336";
@@ -160,6 +247,10 @@ class PlayerViewController: UIViewController,UITableViewDelegate,MFMessageCompos
         switch (result.rawValue) {
         case MessageComposeResult.cancelled.rawValue:
             print("Message was cancelled")
+           
+            
+
+            
             self.dismiss(animated: true, completion: nil)
         case MessageComposeResult.failed.rawValue:
             print("Message failed")
@@ -171,39 +262,35 @@ class PlayerViewController: UIViewController,UITableViewDelegate,MFMessageCompos
             break;
         }
     }
-    
+fileprivate func createAndLoadInterstitial() {
+    interstitial = GADInterstitial(adUnitID: "ca-app-pub-8623108209004118/5622775628")
+    let request = GADRequest()
+    // Request test ads on devices you specify. Your test device ID is printed to the console when
+    // an ad request is made.
+    request.testDevices = [ kGADSimulatorID, "2077ef9a63d2b398840261c8221a0c9a" ]
+    interstitial.load(request)
+}
+
     @IBAction func close_click(_ sender: Any) {
+        if avPlayer != nil
+        {
                 if (avPlayer.isPlaying)
                 {
                     avPlayer.pause()
                     isPaused=true
                     //avPlayer=nil
                 }
+        }
         
-                self.dismiss(animated: true, completion: nil)
+//        if interstitial.isReady {
+//            interstitial.present(fromRootViewController: self)
+//        } else {
+//            print("Ad wasn't ready")
+//        }
+
+                               self.dismiss(animated: true, completion: nil)
     }
 
-//    @IBAction func playButtonClicked(_ sender: UIButton) {
-//        if #available(iOS 10.0, *) {
-//            self.togglePlayPause()
-//        } else {
-//            // showAlert "upgrade ios version to use this feature"
-//           
-//        }
-//    }
-//    
-//    @available(iOS 10.0, *)
-//    func togglePlayPause() {
-//        if avPlayer.timeControlStatus == .playing  {
-//            playButton.setImage(UIImage(named:"iplay"), for: .normal)
-//            avPlayer.pause()
-//            isPaused = true
-//        } else {
-//            playButton.setImage(UIImage(named:"ipause"), for: .normal)
-//            avPlayer.play()
-//            isPaused = false
-//        }
-//    }
     @IBAction func play(_ sender : AnyObject) {
         
         print("play click")
@@ -227,7 +314,9 @@ class PlayerViewController: UIViewController,UITableViewDelegate,MFMessageCompos
     }
     
     func playNextAudio(){
-        showwaiting()
+        //showwaiting()
+        print("play next")
+        isPaused = false
         currentAudioIndex += 1
         if currentAudioIndex>self.listtophit.count-1{
             currentAudioIndex -= 1
@@ -245,7 +334,8 @@ class PlayerViewController: UIViewController,UITableViewDelegate,MFMessageCompos
     
     
     func playPreviousAudio(){
-        showwaiting()
+        //showwaiting()
+        isPaused = false
         currentAudioIndex -= 1
         if currentAudioIndex<0{
             currentAudioIndex += 1
@@ -316,7 +406,8 @@ class PlayerViewController: UIViewController,UITableViewDelegate,MFMessageCompos
     
     func didPlayToEnd() {
         //self.nextTrack()
-        playNextAudio()
+        print("play finish")
+        //playNextAudio()
     }
     
     func tick(){
@@ -387,7 +478,7 @@ class PlayerViewController: UIViewController,UITableViewDelegate,MFMessageCompos
         let seconds: Int32 = totalSeconds%60
         let minutes: Int32 = (totalSeconds/60)%60
         let hours: Int32 = totalSeconds/3600
-        return String(format: "%02d:%02d:%02d", hours,minutes,seconds)
+        return String(format: "%02d:%02d",minutes,seconds)
     }
     
     @IBAction func backButtonClicked(_ sender: Any) {
@@ -443,7 +534,7 @@ class PlayerViewController: UIViewController,UITableViewDelegate,MFMessageCompos
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     {
-        showwaiting()
+       // showwaiting()
         print("chon: \(indexPath.row)")
         currentAudioIndex=indexPath.row
     

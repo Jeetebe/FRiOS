@@ -10,6 +10,7 @@ import UIKit
 import GoogleMobileAds
 import Alamofire
 import BXSlider
+import Social
 
 
 extension UIImageView {
@@ -23,7 +24,10 @@ extension UIImageView {
 class FirstViewController: UIViewController ,UICollectionViewDelegate, UICollectionViewDataSource,GADNativeExpressAdViewDelegate, GADVideoControllerDelegate {
     
     let adUnitId = "ca-app-pub-8623108209004118/6575771983"
-
+    
+    let link:String="Nhạc chờ Funring  http://itunes.apple.com/app/id1265447339"
+    
+    
     @IBOutlet weak var varH: NSLayoutConstraint!
      @IBOutlet weak var sliderView: UIView!
     @IBOutlet weak var myTable: UITableView!
@@ -42,8 +46,27 @@ class FirstViewController: UIViewController ,UICollectionViewDelegate, UICollect
     @IBOutlet weak var collv: UICollectionView!
     
    
+    @IBAction func share(_ sender : AnyObject) {
+        
+        print("share click")
+        if SLComposeViewController.isAvailable(forServiceType: SLServiceTypeFacebook) {
+            let controller = SLComposeViewController(forServiceType: SLServiceTypeFacebook)
+            
+            controller?.setInitialText(link)
+            //controller.addImage(captureScreen())
+            self.present(controller!, animated:true, completion:nil)
+        }
+            
+        else {
+            print("no Facebook account found on device")
+            var alert = UIAlertView(title: "Thông báo", message: "Bạn chưa đăng nhập facebook", delegate: nil, cancelButtonTitle: "OK")
+            alert.show()
+        }
 
-    
+        
+
+  
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -52,7 +75,7 @@ class FirstViewController: UIViewController ,UICollectionViewDelegate, UICollect
         alamofireGetAlbum()
        alamofireGetSlide()
       
-        
+      
         
         //admod
         nativeExpressAdView.adUnitID = adUnitId
@@ -127,7 +150,8 @@ func collectionView(_ collectionView: UICollectionView, layout collectionViewLay
 }
 func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     if let cell = collectionView.cellForItem(at: indexPath as IndexPath) {
-        showplayer()
+        let id=list[indexPath.row].nameid
+        showplayer(id: id)
     } else {
         // Error indexPath is not on screen: this should never happen.
     }
@@ -265,7 +289,10 @@ func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPat
                 let slider = BXSlider<BXSimpleSlide>()
                 slider.onTapBXSlideHandler = { slide in
                     NSLog("onTapSlide \(slide.imageURL)")
-                    self.showplayer()
+                    //let slide = (String) slide.imageURL
+                    let id:String=self.getalbumid(str: (slide.imageURL?.absoluteString)!)
+                    print("id=\(id)")
+                    self.showplayer(id:id)
                 }
                 slider.autoSlide = false
                 
@@ -279,6 +306,15 @@ func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPat
                 self.varH.constant=he
                 slider.frame = CGRect(x: 0, y: 0, width: Int(widthV-20), height: Int(he))
         }
+    }
+    func  getalbumid(str:String) -> String {
+        
+        if let i = listslide.index(where: { $0.imgurl == str }) {
+            return listslide[i].nameid
+        }
+        
+        
+        return ""
     }
 
     func alamofireGetAlbum() {
@@ -329,17 +365,19 @@ func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPat
             editTaskVC.chonInt = indexPath.row
             editTaskVC.listtophit=self.listtophit
             editTaskVC.loai=0
+            editTaskVC.albumid="tophit"
             
                     }
         
     }
-    func showplayer() -> Void {
+    func showplayer(id:String) -> Void {
         let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
         
         let editTaskVC = storyBoard.instantiateViewController(withIdentifier: "player") as! PlayerViewController
         editTaskVC.chonInt = 0
-        editTaskVC.listtophit=self.listtophit
-        editTaskVC.loai=0
+        //editTaskVC.listtophit=self.listtophit
+        editTaskVC.loai=1
+        editTaskVC.albumid=id
         self.present(editTaskVC, animated:true, completion:nil)
     }
     

@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		A2EBD0DC7A4AD8798E908CE1 /* Pods_FRios.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 64A65F90F1AD15C2C2538B62 /* Pods_FRios.framework */; };
+		FA1B95661F2C1F2B0080542F /* basic_star.png in Resources */ = {isa = PBXBuildFile; fileRef = FA1B95651F2C1F2B0080542F /* basic_star.png */; };
+		FA1B95681F2C1F7B0080542F /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA1B95671F2C1F7B0080542F /* Social.framework */; };
+		FA1B956A1F2C1FE30080542F /* fshare2.png in Resources */ = {isa = PBXBuildFile; fileRef = FA1B95691F2C1FE30080542F /* fshare2.png */; };
+		FA1B956C1F2C8DAF0080542F /* bg3.png in Resources */ = {isa = PBXBuildFile; fileRef = FA1B956B1F2C8DAF0080542F /* bg3.png */; };
 		FA3A39AB1F243ECA00A7CDA3 /* TesplayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA3A39AA1F243ECA00A7CDA3 /* TesplayerViewController.swift */; };
 		FA4D9EA31F17A3390096EAC8 /* SampleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4D9EA21F17A3390096EAC8 /* SampleTableViewCell.swift */; };
 		FA4D9EA51F17A5EF0096EAC8 /* Song.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4D9EA41F17A5EF0096EAC8 /* Song.swift */; };
@@ -63,6 +67,10 @@
 		64A65F90F1AD15C2C2538B62 /* Pods_FRios.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FRios.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6BD90EA668365E065806C88C /* Pods-FRios.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FRios.debug.xcconfig"; path = "Pods/Target Support Files/Pods-FRios/Pods-FRios.debug.xcconfig"; sourceTree = "<group>"; };
 		D995A0886534D2AE0FA0AC33 /* Pods-FRios.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FRios.release.xcconfig"; path = "Pods/Target Support Files/Pods-FRios/Pods-FRios.release.xcconfig"; sourceTree = "<group>"; };
+		FA1B95651F2C1F2B0080542F /* basic_star.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = basic_star.png; sourceTree = "<group>"; };
+		FA1B95671F2C1F7B0080542F /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
+		FA1B95691F2C1FE30080542F /* fshare2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fshare2.png; sourceTree = "<group>"; };
+		FA1B956B1F2C8DAF0080542F /* bg3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg3.png; sourceTree = "<group>"; };
 		FA3A39AA1F243ECA00A7CDA3 /* TesplayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TesplayerViewController.swift; sourceTree = "<group>"; };
 		FA4D9EA21F17A3390096EAC8 /* SampleTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SampleTableViewCell.swift; sourceTree = "<group>"; };
 		FA4D9EA41F17A5EF0096EAC8 /* Song.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Song.swift; sourceTree = "<group>"; };
@@ -123,6 +131,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FA1B95681F2C1F7B0080542F /* Social.framework in Frameworks */,
 				A2EBD0DC7A4AD8798E908CE1 /* Pods_FRios.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -133,6 +142,7 @@
 		5AA93C42F2BF5381B50D8FFE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				FA1B95671F2C1F7B0080542F /* Social.framework */,
 				64A65F90F1AD15C2C2538B62 /* Pods_FRios.framework */,
 			);
 			name = Frameworks;
@@ -205,9 +215,12 @@
 			isa = PBXGroup;
 			children = (
 				FAC81CAC1F1B97B900DA408D /* nosinger.png */,
+				FA1B95691F2C1FE30080542F /* fshare2.png */,
 				FA9051211F23AADF0078943F /* note.png */,
+				FA1B95651F2C1F2B0080542F /* basic_star.png */,
 				FABE2A771F19BA7A005A31A3 /* circle-close-128.png */,
 				FABE2A7B1F19CBE0005A31A3 /* ic_launcherfr.png */,
+				FA1B956B1F2C8DAF0080542F /* bg3.png */,
 				FABE2A751F19B967005A31A3 /* close_btn.png */,
 				FABE2A691F19ABF9005A31A3 /* inext.png */,
 				FABE2A711F19B6B6005A31A3 /* bg.jpg */,
@@ -304,7 +317,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FA1B95661F2C1F2B0080542F /* basic_star.png in Resources */,
 				FABE2A6D1F19ABF9005A31A3 /* inext.png in Resources */,
+				FA1B956C1F2C8DAF0080542F /* bg3.png in Resources */,
 				FA674E431F167D230034C3A6 /* GoogleService-Info.plist in Resources */,
 				FABE2A7C1F19CBE0005A31A3 /* ic_launcherfr.png in Resources */,
 				FA674E411F1678960034C3A6 /* music-box-outline.png in Resources */,
@@ -327,6 +342,7 @@
 				FA674E241F1660EC0034C3A6 /* 7.jpg in Resources */,
 				FABE2A6E1F19ABF9005A31A3 /* ipause.png in Resources */,
 				FABE2A841F1A54BD005A31A3 /* ic_list_48pt.png in Resources */,
+				FA1B956A1F2C1FE30080542F /* fshare2.png in Resources */,
 				FA674E0C1F1659F50034C3A6 /* Assets.xcassets in Resources */,
 				FA674E0A1F1659F50034C3A6 /* Main.storyboard in Resources */,
 			);
@@ -539,6 +555,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = AW2QKY6358;
 				INFOPLIST_FILE = FRios/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.jtb4.FRios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -556,6 +573,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = AW2QKY6358;
 				INFOPLIST_FILE = FRios/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.jtb4.FRios;
 				PRODUCT_NAME = "$(TARGET_NAME)";

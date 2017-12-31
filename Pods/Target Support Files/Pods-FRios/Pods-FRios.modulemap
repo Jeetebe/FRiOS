@@ -1,0 +1,6 @@
+framework module Pods_FRios {
+  umbrella header "Pods-FRios-umbrella.h"
+
+  export *
+  module * { export * }
+}
